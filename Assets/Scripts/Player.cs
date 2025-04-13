@@ -48,4 +48,18 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D other) {
+        GameManager gameManager = FindObjectOfType<GameManager>();
+        if (gameManager == null) {
+            Debug.LogError("GameManager not found in the scene!");
+            return;
+        }
+        
+        if (other.gameObject.tag == "Obstacle") {
+            gameManager.GameOver();
+        } else if (other.gameObject.tag == "Scoring") {
+            gameManager.IncreaseScore();
+        }
+    }
+
 }
