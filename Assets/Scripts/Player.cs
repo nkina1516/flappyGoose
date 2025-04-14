@@ -42,6 +42,18 @@ public class Player : MonoBehaviour
             // Apply gravity and update the position
             direction.y += gravity * Time.deltaTime;
             transform.position += direction * Time.deltaTime;
+            
+            // Check if player is below the bottom of the screen
+            Vector3 screenBottom = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, 0));
+            if (transform.position.y < screenBottom.y)
+            {
+                Debug.Log("Player hit bottom of screen!");
+                GameManager gameManager = FindObjectOfType<GameManager>();
+                if (gameManager != null)
+                {
+                    gameManager.GameOver();
+                }
+            }
         }
     }
 
@@ -67,7 +79,7 @@ public class Player : MonoBehaviour
             return;
         }
         
-        if (other.gameObject.CompareTag("Obstacle")) {
+        if (other.gameObject.CompareTag("Obstacle") || other.gameObject.CompareTag("Ground")) {
             gameManager.GameOver();
         } else if (other.gameObject.name == "Scoring") {
             gameManager.IncreaseScore();
@@ -78,7 +90,7 @@ public class Player : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision) {
         Debug.Log("Collision with: " + collision.gameObject.name + " - Tag: " + collision.gameObject.tag);
         
-        if (collision.gameObject.CompareTag("Obstacle")) {
+        if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("Ground")) {
             GameManager gameManager = FindObjectOfType<GameManager>();
             if (gameManager != null) {
                 gameManager.GameOver();
